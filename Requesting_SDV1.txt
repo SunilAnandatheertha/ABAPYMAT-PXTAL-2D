@@ -1,0 +1,13 @@
+** 
+** FIELD OUTPUT: F-Output-1
+** 
+
+*Output, field, frequency = 1
+*Node Output
+RF, U
+*Element Output, directions=YES
+E, EE, LE, PE, PEEQ, PEEQMAX, PEMAG, S, SDV
+
+** 
+** HISTORY OUTPUT: H-Output-1
+** 
