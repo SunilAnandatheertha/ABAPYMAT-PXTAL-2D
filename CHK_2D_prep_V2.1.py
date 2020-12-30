@@ -16,20 +16,23 @@ from connectorBehavior import *
 import sys
 ######################################################################
 # Define constants
-
 # Model origin MUST be 0,0
 Modelinfo01 = (('Model_origin_x', '0'),
                ('Model_origin_y', '0'),
                ('Model_enddim_x', '100.0'),
 	           ('Model_enddim_y', '6.0'),
 	     	  )
-Model_origin_x, Model_origin_y, Model_enddim_x, Model_enddim_y\
+Model_origin_x, Model_origin_y, Model_enddim_x, Model_enddim_y,\
  =  getInputs(fields = Modelinfo01, label = 'Model position and size', dialogTitle = 'Modelinfo01: Location and size', )
+Model_origin_x = float(Model_origin_x)
+Model_origin_y = float(Model_origin_y)
+Model_enddim_x = float(Model_enddim_x)
+Model_enddim_y = float(Model_enddim_y)
 #Model_origin_x = 0.
 #Model_origin_y = 0.
 #Model_enddim_x = 100.0
 #Model_enddim_y = 6.0
-
+######################################################################
 # anti - prime numbers:
 # 1, 2, 4, 6, 12, 24, 36, 48, 60, 120, 180
 # 240, 360, 720, 840, 1260, 1680, 2520, 5040
@@ -37,53 +40,63 @@ Modelinfo02 = (('NumPartitions_x', '96'),
                ('NumPartitions_y', '2'),
                ('NumPartitions_total', '192'),
 	     	  )
-NumPartitions_x, NumPartitions_y, NumPartitions_total\
+NumPartitions_x, NumPartitions_y, NumPartitions_total,\
  =  getInputs(fields = Modelinfo02, label = 'CHK grain structure info', dialogTitle = 'Modelinfo02: Partitioning details', )
+NumPartitions_x     = int(NumPartitions_x)
+NumPartitions_y     = int(NumPartitions_y)
+NumPartitions_total = int(NumPartitions_total)
 #NumPartitions_x  = 48
 #NumPartitions_y  = 4
-
+######################################################################
 Num_DatumPlanes_x = NumPartitions_x - 1
 Num_DatumPlanes_y = NumPartitions_y - 1
-
+######################################################################
 Modelinfo03 = (('Time_Step1_total_time', '1'),
                ('Time_Step1_initial_incr', '0.005'),
                ('Time_Step1_minimum_incr', '1.01e-05'),
                ('Time_Step1_maximum_incr', '0.05'),
 	     	  )
-Time_Step1_total_time, Time_Step1_initial_incr, Time_Step1_minimum_incr, Time_Step1_maximum_incr\
+Time_Step1_total_time, Time_Step1_initial_incr, Time_Step1_minimum_incr, Time_Step1_maximum_incr,\
  =  getInputs(fields = Modelinfo03, label = 'Time stepping details', dialogTitle = 'Modelinfo03', )
+Time_Step1_total_time   = float(Time_Step1_total_time)
+Time_Step1_initial_incr = float(Time_Step1_initial_incr)
+Time_Step1_minimum_incr = float(Time_Step1_minimum_incr)
+Time_Step1_maximum_incr = float(Time_Step1_maximum_incr)
 #Time_Step1_total_time   = 1.0
 #Time_Step1_initial_incr = 0.005
 #Time_Step1_minimum_incr = 1.01e-05
 #Time_Step1_maximum_incr = Time_Step1_total_time
-
+######################################################################
 Modelinfo04 = (('ElementFactor', '1'),
                ('ElementTypeFlagID: 1: CPS4R-or-CPS3...2: CPS8-or-CPS6M...3: CPS4-or-CPS3...4: CPS8R-or-CPS6M...5: CPS8R-or-CPS6', '5'),
                ('ElementShapeFlagID: 1: Quad-structured...2: Quad-free...3: Tri-Structured...4: Tri-Free', '4'),
 	     	  )
-factor, ElementTypeFlagID, ElementShapeFlagID\
+factor, ElementTypeFlagID, ElementShapeFlagID,\
 =  getInputs(fields = Modelinfo04, label = 'Enter element details', dialogTitle = 'Modelinfo04: FE details', )
+factor             = float(factor)
+ElementTypeFlagID  = int(ElementTypeFlagID)
+ElementShapeFlagID = int(ElementShapeFlagID)
 #factor = 1
 #ElementTypeFlagID  = 5 #1: CPS4R-or-CPS3\\\\\2: CPS8-or-CPS6M\\\\\3: CPS4-or-CPS3\\\\\4: CPS8R-or-CPS6M\\\\\5: CPS8R-or-CPS6
 #ElementShapeFlagID = 4 #1: Quad-structured\\\\\2: Quad-free\\\\\3: Tri-Structured\\\\\4: Tri-Free
 ElementSize   = (Model_enddim_y/NumPartitions_y)/factor
-
+######################################################################
 Modelinfo05 = (('TotalStrain_x', '0.04'),
 	     	  )
-TotalStrain_x\
+TotalStrain_x,\
  =  getInputs(fields = Modelinfo05, label = 'Enter Boun. Cond. details', dialogTitle = 'Modelinfo05: Boundary conditions', )
+TotalStrain_x = float(TotalStrain_x)
 #TotalStrain_x = 0.04;
-
-
+######################################################################
 Modelinfo06 = (('CAE_File_name', ''),
 	     	  )
-CAE_File_name\
+CAE_File_name,\
  =  getInputs(fields = Modelinfo06, label = 'Enter CAE file name', dialogTitle = 'Modelinfo06: filenames', )
+CAE_File_name = str(CAE_File_name)
 ######################################################################
 #mdb.saveAs(pathName = 'C:\Temp\CalibrationModels\Location A\Cal_48ng\Ng_'+str(NumPartitions_x*NumPartitions_y)+'_'+'Ngx_'+str(NumPartitions_x)+'_'+'Ngy_'+str(NumPartitions_y))
 ######################################################################
 # Calculate constants
-
 Model_size_x = Model_enddim_x - Model_origin_x
 Model_size_y = Model_enddim_y - Model_origin_y
 
@@ -115,7 +128,6 @@ RE_Displacement = TotalStrain_x*Model_size_x
 model = mdb.models['Model-1']
 ######################################################################
 # make part
-
 model.ConstrainedSketch(name='__profile__', sheetSize = 1.0)
 model.sketches['__profile__'].rectangle(point1 = (Model_origin_x, Model_origin_y), point2 = (Model_enddim_x, Model_enddim_y))
 model.Part(dimensionality=TWO_D_PLANAR, name='partname', type=DEFORMABLE_BODY)
@@ -308,6 +320,6 @@ print('Grain Aspect Ratio: %2f'% float((Model_size_x/NumPartitions_x)/(Model_siz
 #CAE_File_name = '\\CB-24-2-1-cps4--tr1'
 ######################################################################
 CAEFILEpath = 'C:\\Users\\anandats\\OneDrive - Coventry University\\coventry-thesis\\Chapter7\\ABAQUS_CAL_DATA_FILES\\LocationB'
-mdb.saveAs(pathName = CAEFILEpath + CAE_File_name)
+mdb.saveAs(pathName = CAEFILEpath + '\\' + CAE_File_name)
 #mdb.saveAs(pathName = 'C:\Temp\CalibrationModels\Location A\Cal_48ng\Ng_'+str(NumPartitions_x*NumPartitions_y)+'_'+'Ngx_'+str(NumPartitions_x)+'_'+'Ngy_'+str(NumPartitions_y))
 print('Printing the CAE file: %s'% (CAE_File_name+'.cae'))
