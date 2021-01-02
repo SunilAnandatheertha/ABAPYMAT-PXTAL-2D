@@ -113,14 +113,13 @@ elseif exist(to_HPC_post_calib_folder_name, 'dir')==0 % 0: foolder does no exist
         RAW_INP_FILE = fileread(FULL_Source_INP_Filename);
         SPLIT_RAW_INP_FILE = regexp(RAW_INP_FILE,'\n','split');
         %$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-        % PART 1 -- PRE MATERIAL DATA
+        % PART 1 -- PRE MATERIAL DATA        
         LeftCap_0_LineNumber                    = 1;                                                  % DONT CHANGE
         RightCap_0_LineNumber                   = find(contains(SPLIT_RAW_INP_FILE, '** MATERIALS')); % DONT CHANGE
-        FULL_Destination_INP_Filename_PART_FULL = [DestinationFolder filesep [This_Sim_Folder_Name '.inp']];
+        FULL_Destination_INP_Filename_PART_FULL = [DestinationFolder filesep [This_Sim_Folder_Name '_new.inp']];
         fileID                                  = fopen(FULL_Destination_INP_Filename_PART_FULL,'W');
         for LineNumber = LeftCap_0_LineNumber:RightCap_0_LineNumber+1
             fprintf(fileID, [SPLIT_RAW_INP_FILE{LineNumber} '\n']);
-%             fprintf('%s\n', [SPLIT_RAW_INP_FILE{LineNumber})
         end
         disp('Write part - 1 finished: Model geom and mesh details')
         fclose(fileID);
@@ -159,9 +158,8 @@ elseif exist(to_HPC_post_calib_folder_name, 'dir')==0 % 0: foolder does no exist
         disp('Write part - 4 finished: "Field output" to "End of Step-1"')
         fclose(fileID);
         %$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-        fprintf('The input   file     "%s" has been written\n', [This_Sim_Folder_Name '.inp'])
-        fprintf('All related files of "%s" have been copied to HPC sim folder\n', [This_Sim_Folder_Name '.inp'])
-        pause(0.5)
+        fprintf('The input file "%s" has been written\n', [This_Sim_Folder_Name '.inp'])
+        disp('    and all related files have been copied to HPC sim folder\n')
     end
 end
 disp('\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \')
